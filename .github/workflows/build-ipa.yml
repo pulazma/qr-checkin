@@ -8,7 +8,8 @@ on:
 
 jobs:
   build-ipa:
-    runs-on: macos-latest
+    # macos-13 (Intel) обычно быстрее берётся в очередь, чем macos-latest (arm64)
+    runs-on: macos-13
     timeout-minutes: 60
 
     steps:
