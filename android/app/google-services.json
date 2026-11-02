@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "700044723645",
+    "project_id": "qrald-71800",
+    "storage_bucket": "qrald-71800.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700044723645:android:5572601cd0296f60d07ed4",
+        "android_client_info": {
+          "package_name": "com.example.qr_checkin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIqgVdaKq9_vZsPYomuhAEhm8norqBm5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

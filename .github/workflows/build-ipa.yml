@@ -1,0 +1,55 @@
+# Собирает unsigned IPA на macOS-раннере GitHub → ставь через Sideloadly на iPhone
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  build-ipa:
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign
+
+      - name: Package IPA for Sideloadly
+        run: |
+          set -e
+          APP_PATH="build/ios/iphoneos/Runner.app"
+          if [ ! -d "$APP_PATH" ]; then
+            APP_PATH="$(find build/ios -name 'Runner.app' -type d | head -n 1)"
+          fi
+          if [ -z "$APP_PATH" ] || [ ! -d "$APP_PATH" ]; then
+            echo "Runner.app not found"
+            find build/ios -maxdepth 4 -type d -print || true
+            exit 1
+          fi
+          echo "Packaging: $APP_PATH"
+          rm -rf Payload qr_checkin.ipa
+          mkdir Payload
+          cp -R "$APP_PATH" Payload/
+          zip -qr qr_checkin.ipa Payload
+          ls -lh qr_checkin.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qr-checkin-ipa
+          path: qr_checkin.ipa
+          if-no-files-found: error
+          retention-days: 14
